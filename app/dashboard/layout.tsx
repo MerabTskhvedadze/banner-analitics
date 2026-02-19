@@ -21,7 +21,7 @@ import {
 } from "antd";
 
 import {
-  MdToken,
+  MdToll,
   MdWallet,
   MdLogout,
   MdPerson,
@@ -188,7 +188,7 @@ export default function DashboardLayout({
             <Flex align="center">
               <Tag className="rounded-full! sm:inline-flex items-center px-3! py-1.5! font-semibold text-sm! border border-primary/20! bg-primary/10! text-primary!">
                 <Flex align="center" gap={2}>
-                  <MdToken className="text-base mr-1.5" />
+                  <MdToll className="text-base mr-1.5" />
                   <span className="mr-1 pr-2 border-r border-primary/20">450 Tokens</span>
 
                   <button

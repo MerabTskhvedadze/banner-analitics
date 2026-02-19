@@ -16,15 +16,9 @@ import {
   Typography,
 } from "antd";
 
-import {
-  EyeTwoTone,
-  EyeInvisibleOutlined,
-} from "@ant-design/icons";
-
 export default function SignupPage() {
   const [form] = Form.useForm();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const onFinish = (values: any) => {
     console.log(values);
@@ -91,21 +85,10 @@ export default function SignupPage() {
           ]}
           hasFeedback
         >
-          <Input
+          <Input.Password
             size="large"
             placeholder="Min. 8 characters"
-            type={showPassword ? "text" : "password"}
-            suffix={
-              <button
-                type="button"
-                onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                style={{ background: "transparent", border: 0, padding: 0 }}
-              >
-                {showPassword ? <EyeInvisibleOutlined /> : <EyeTwoTone />}
-              </button>
-            }
+            visibilityToggle={{ visible: showPassword, onVisibleChange: setShowPassword }}
             className="bg-transparent dark:text-white"
           />
         </Form.Item>
@@ -131,24 +114,11 @@ export default function SignupPage() {
             }),
           ]}
         >
-          <Input
+          <Input.Password
             size="large"
             placeholder="Re-enter your password"
-            type={showConfirmPassword ? "text" : "password"}
-            suffix={
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword((v) => !v)}
-                aria-label={
-                  showConfirmPassword ? "Hide password" : "Show password"
-                }
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                style={{ background: "transparent", border: 0, padding: 0 }}
-              >
-                {showConfirmPassword ? <EyeInvisibleOutlined /> : <EyeTwoTone />}
-              </button>
-            }
             className="bg-transparent dark:text-white"
+            visibilityToggle={{ visible: showPassword, onVisibleChange: setShowPassword }}
           />
         </Form.Item>
 

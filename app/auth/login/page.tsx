@@ -6,8 +6,14 @@ import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { BsLinkedin } from "react-icons/bs";
 
-import { Form, Input, Button, Divider, Checkbox, Typography } from "antd";
-import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
+import {
+  Form,
+  Input,
+  Button,
+  Divider,
+  Checkbox,
+  Typography
+} from "antd";
 
 export default function LoginPage() {
   const [form] = Form.useForm();
@@ -74,24 +80,12 @@ export default function LoginPage() {
           name="password"
           rules={[
             { required: true, message: "Please enter your password" },
-            { min: 8, message: "Password must be at least 8 characters" },
           ]}
         >
-          <Input
+          <Input.Password
             size="large"
             placeholder="Your password"
-            type={showPassword ? "text" : "password"}
-            suffix={
-              <button
-                type="button"
-                onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                style={{ background: "transparent", border: 0, padding: 0 }}
-              >
-                {showPassword ? <EyeInvisibleOutlined /> : <EyeTwoTone />}
-              </button>
-            }
+            visibilityToggle={{ visible: showPassword, onVisibleChange: setShowPassword }}
             className="bg-transparent dark:text-white"
           />
         </Form.Item>

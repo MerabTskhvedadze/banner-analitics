@@ -38,9 +38,6 @@ export default function Home() {
       <section className="relative pt-20 pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-16">
           <div className="flex-1 text-center lg:text-left">
-            <div data-animate="hero-badge" className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold mb-6">
-              <span className="mr-2">✨</span> NEW: AI Sentiment Analysis 2.0
-            </div>
             <h1 data-animate="hero-title" className="text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white leading-[1.1] mb-6">
               Stop Guessing, <br /><span className="text-primary">Start Scoring.</span>
             </h1>
@@ -51,14 +48,6 @@ export default function Home() {
               <button className="bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all shadow-xl shadow-primary/30 flex items-center gap-2">
                 Try it Now <MdArrowForward />
               </button>
-            </div>
-            <div data-animate="hero-social" className="mt-8 flex items-center justify-center lg:justify-start gap-4">
-              <div className="flex -space-x-2">
-                <img className="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark" data-alt="Portrait of a female professional designer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNDr3mbcdclRxD0QdVfQDsONi---Z877E3eRg8SVceJ1fErbSacAO525O0mZbCBxvS9KiY6lKBvG7EVHhXt-mzWVYv7iZpQuoudmI9olayj-b50pJWol9BSGTr8V-CLbP_JMHn2ihjqHJ2kLwTn_ZGHz80uOFwg33ARWefD5qh2RnXYPkEDzcQ63EBxTLa68bWcdd5psOTYqnlA5iQDLLiypv7CZ2nw3fcn-d0XmzKsPnmCZqkmeuwNoDIgBOiiaZ1EsG7kWEDxD7Z" />
-                <img className="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark" data-alt="Portrait of a male marketing specialist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqsTXS6sKKwpUbAllICLhBwFoPpn4RggY3r4eFJOb5d8gIrVk_zRebHtgwIqKnImBGaqICb40lJ8_kRDE1ocqD5rAs9qz06DIS2PFRacn0vZ3XawbRjrJyA0u7_eKrc23-CLIUNiw_Ci3bPRW6L85mit9yFEzI0iRZFtix2Zq8uZ4bO3kgy9_hlgPZUzoL6uIvNHatzv37a2YgHLypvCNkPTA47gLr9GL7GhNhjwfs4p7RqTNgD-jYY_l2eNtAENJoLIGR6N7e8joG" />
-                <img className="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark" data-alt="Portrait of a smiling user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEl1PKIHIaIzQCROdGKRqYEb8Tedt3DqmftzmWJC1x1fvbwzkiRpUPHgqRrnIx2_e39c2j0CqihhLUTucaUbJ4V0jw8Zon0tn9nDPWCvzGAdoghO3cz-w2PkkVGUbLxWZ2DweoijC-RWVO7QkdMZfq83XueqpmmquTeLXSih8naJZ-xNL133qqhQBDEuUM4zqzRQh3ORVUJeDrRTv9iCenb1KoycV2m6MV88SkWGelB5Mco-fyYwAYaviVN8P9S2xHVKFW543NTKDl" />
-              </div>
-              <p className="text-sm text-slate-500 font-medium">Joined by 2,000+ marketing teams</p>
             </div>
           </div>
           <div data-animate="hero-image" className="flex-1 relative">
@@ -273,10 +262,7 @@ export default function Home() {
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 relative z-10">Ready to optimize your designs?</h2>
             <p className="text-primary-100 text-xl mb-10 max-w-2xl mx-auto opacity-90 relative z-10 text-white/80">Join thousands of marketers who are saving time and money with BannerScore AI.</p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
-              <button className="bg-white text-primary px-10 py-5 rounded-2xl font-bold text-lg hover:scale-105 transition-transform shadow-xl">Get Started for Free</button>
-              <button className="bg-transparent border-2 border-white/30 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white/10 transition-colors">Talk to Experts</button>
-            </div>
+            <button className="bg-white text-primary px-10 py-5 rounded-2xl font-bold text-lg hover:scale-105 transition-transform shadow-xl">Get Started for Free</button>
           </div>
         </div>
       </section>

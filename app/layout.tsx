@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import "antd/dist/reset.css";
 import "./globals.css";
 
 import { AntdRegistry } from '@ant-design/nextjs-registry'

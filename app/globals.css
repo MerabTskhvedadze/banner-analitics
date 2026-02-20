@@ -46,3 +46,7 @@ body {
 button {
   cursor: pointer;
 }
+
+* {
+  scrollbar-width: none;
+}

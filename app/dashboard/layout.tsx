@@ -173,7 +173,7 @@ export default function DashboardLayout({
 
       <Layout className="min-h-0!">
         <Header className="pr-4! border-b border-slate-100 dark:border-slate-800 bg-white! dark:bg-background-dark! p-0!">
-          <Flex align="center" justify="space-between">
+          <Flex align="center" justify="space-between" className="max-w-7xl w-full mx-auto!">
             <Flex align="center" gap={16}>
               <Button
                 type="text"
@@ -216,7 +216,7 @@ export default function DashboardLayout({
           </Flex>
         </Header>
 
-        <Content className="p-4">
+        <Content className="p-4 max-w-7xl w-full mx-auto overflow-y-auto">
           {children}
         </Content>
       </Layout>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { Upload, Typography, message, Button, Space } from "antd";
 import type { UploadProps, UploadFile } from "antd";
 import { CloudUploadOutlined, DeleteOutlined } from "@ant-design/icons";

@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 
 export type TokenUsageData = {
-  used: number;          // used tokens
-  remaining: number;     // remaining tokens
-  usedLabel?: string;    // optional label override
+  used: number;          
+  remaining: number;     
+  usedLabel?: string;    
   remainingLabel?: string;
 };
 
 type PieChartProps = {
-  data?: TokenUsageData | null; // if null -> shows 0s
-  onViewHistory?: () => void;   // button click callback
+  data?: TokenUsageData | null; 
+  onViewHistory?: () => void;   
   title?: string;
 };
 
@@ -36,10 +36,8 @@ export function PieChart({
     };
   }, [used, remaining]);
 
-  // Keep your original values (r=70 => circumference ~ 439.82, your code uses 440)
   const circumference = 440;
   const dashOffset = useMemo(() => {
-    // percentUsed=75 => offset=110 (matches your example: 440 * (1 - 0.75) = 110)
     return circumference * (1 - percentUsed / 100);
   }, [percentUsed]);
 
@@ -50,7 +48,6 @@ export function PieChart({
     <div className="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-border-dark p-6 shadow-sm flex flex-col">
       <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{title}</h2>
 
-      {/* Donut */}
       <div className="relative w-40 h-40 mx-auto mb-6">
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
           <circle
@@ -105,7 +102,6 @@ export function PieChart({
           </span>
         </div>
 
-        {/* optional total line if you want */}
         <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 pt-1">
           <span>Total</span>
           <span className="font-medium">{total.toLocaleString()} TKN</span>

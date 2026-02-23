@@ -4,6 +4,8 @@ import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { signOut } from '@/components/auth/actions'
+
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 import {
@@ -85,7 +87,7 @@ export default function DashboardLayout({
         key: "/logout",
         icon: <MdLogout />,
         label: <span>Logout</span>,
-        onClick: () => console.log("logout"),
+        onClick: () => signOut(),
       },
     ],
     []

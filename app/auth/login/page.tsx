@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 
+import { signIn } from '@/components/auth/actions'
+
 import { FcGoogle } from "react-icons/fc";
 import { BsLinkedin } from "react-icons/bs";
 
@@ -20,7 +22,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const onFinish = (values: any) => {
-    console.log(values);
+    signIn(values);
   };
 
   return (

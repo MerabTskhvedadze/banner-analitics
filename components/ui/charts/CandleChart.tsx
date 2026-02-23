@@ -1,16 +1,16 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 export type RangeKey = "7d" | "30d" | "1y";
 
 export type ActivityEvent = {
-  date: string; // ISO or Date-parseable (e.g. "2026-02-19" or ISO timestamp)
+  date: string;
   count: number;
 };
 
 type CandlePoint = {
   label: string;
-  raw: number;   // actual aggregated count for that slot
-  value: number; // normalized 0..100 for height
+  raw: number;
+  value: number;
   isEmpty: boolean;
 };
 
@@ -52,12 +52,6 @@ function monthLabel(year: number, monthIndex0: number) {
   return d.toLocaleDateString(undefined, { month: "short" });
 }
 
-/**
- * Builds the window slots (labels + keys) for the selected range.
- * - 7d: last 7 days including today
- * - 30d: last 30 days including today
- * - 1y: months of current year (Jan..Dec)
- */
 function buildWindow(range: RangeKey) {
   const today = startOfDay(new Date());
 
@@ -115,7 +109,6 @@ export function CandleChart({
   const windowDef = useMemo(() => buildWindow(range), [range]);
 
   const points: CandlePoint[] = useMemo(() => {
-    // aggregate incoming events into a map keyed by day or month
     const map = new Map<string, number>();
 
     if (events && events.length) {
@@ -128,7 +121,6 @@ export function CandleChart({
       }
     }
 
-    // fill window slots (missing -> 0)
     const raws = windowDef.slots.map((s) => map.get(s.slotKey) ?? 0);
     const maxRaw = Math.max(1, ...raws);
 
@@ -136,7 +128,6 @@ export function CandleChart({
       const raw = raws[idx];
       const isEmpty = raw === 0;
 
-      // empty candle: render a small muted bar so it's visible
       const value = isEmpty ? 8 : clamp(Math.round((raw / maxRaw) * 100), 8, 100);
 
       return {
@@ -177,14 +168,12 @@ export function CandleChart({
         </select>
       </div>
 
-      {/* Chart */}
       <div
         className={[
           "relative h-64 w-full flex items-end justify-between px-2",
           range === "30d" ? "gap-1" : "gap-2 md:gap-4",
         ].join(" ")}
       >
-        {/* Grid lines */}
         <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
           <div className="w-full h-px bg-slate-100 dark:bg-border-dark border-dashed" />
           <div className="w-full h-px bg-slate-100 dark:bg-border-dark border-dashed" />
@@ -209,7 +198,6 @@ export function CandleChart({
               ].join(" ")}
               style={{ height: `${pt.value}%` }}
             >
-              {/* tooltip */}
               <div
                 className={[
                   "opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 text-white text-xs px-2 py-1 rounded whitespace-nowrap",
@@ -223,7 +211,6 @@ export function CandleChart({
         })}
       </div>
 
-      {/* X-axis labels */}
       <div
         className={[
           "flex justify-between mt-4 px-2 text-xs text-slate-400 dark:text-slate-500 font-medium",

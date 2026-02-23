@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 
+import { signUp } from '@/components/auth/actions'
+
 import { FcGoogle } from "react-icons/fc";
 import { BsLinkedin } from "react-icons/bs";
 
@@ -21,7 +23,7 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const onFinish = (values: any) => {
-    console.log(values);
+    signUp(values);
   };
 
   return (

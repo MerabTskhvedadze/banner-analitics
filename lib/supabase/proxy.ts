@@ -28,13 +28,19 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims
 
   // Example protection:
-  const isAuthRoute =
-    request.nextUrl.pathname.startsWith('/auth/login') ||
-    request.nextUrl.pathname.startsWith('/auth/signup')
+  const publicPaths = [
+    "/auth/login",
+    "/auth/signup",
+    "/auth/check-email",
+    "/auth/callback",
+  ]
 
-  if (!user && !isAuthRoute) {
+  const pathname = request.nextUrl.pathname
+  const isPublic = publicPaths.some((p) => pathname.startsWith(p))
+
+  if (!user && !isPublic) {
     const url = request.nextUrl.clone()
-    url.pathname = '/auth/login'
+    url.pathname = "/auth/login"
     return NextResponse.redirect(url)
   }
 

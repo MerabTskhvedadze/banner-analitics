@@ -1,0 +1,38 @@
+'use client'
+
+import { createClient } from '@/lib/supabase/client'
+import { Button } from 'antd'
+import { BsLinkedin } from 'react-icons/bs'
+
+export function LinkedInButton() {
+  const supabase = createClient()
+
+  const onLinkedIn = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'linkedin_oidc',
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        scopes: "openid profile email",
+      },
+    })
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    // Important: do the redirect yourself
+    if (data?.url) window.location.assign(data.url)
+  }
+
+  return (
+    <Button
+      htmlType="button"
+      onClick={onLinkedIn}
+      className="font-medium!"
+      icon={<BsLinkedin className="text-primary! text-lg" />}
+    >
+      LinkedIn
+    </Button>
+  )
+}

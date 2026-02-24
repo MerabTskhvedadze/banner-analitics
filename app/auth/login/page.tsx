@@ -16,6 +16,7 @@ import {
   Checkbox,
   Typography
 } from "antd";
+import { LinkedInButton } from "@/components/auth/LinkedInButton";
 
 export default function LoginPage() {
   const [form] = Form.useForm();
@@ -41,12 +42,7 @@ export default function LoginPage() {
           Google
         </Button>
 
-        <Button
-          className="font-medium!"
-          icon={<BsLinkedin className="text-primary! text-lg" />}
-        >
-          LinkedIn
-        </Button>
+        <LinkedInButton />
       </div>
 
       <Divider>Or continue with email</Divider>

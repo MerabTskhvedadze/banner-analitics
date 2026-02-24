@@ -6,7 +6,6 @@ import Link from "next/link";
 import { signIn } from '@/components/auth/actions'
 
 import { FcGoogle } from "react-icons/fc";
-import { BsLinkedin } from "react-icons/bs";
 
 import {
   Form,
@@ -17,17 +16,47 @@ import {
   Typography
 } from "antd";
 import { LinkedInButton } from "@/components/auth/LinkedInButton";
+import { MdError } from "react-icons/md";
 
 export default function LoginPage() {
   const [form] = Form.useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState<null | string>(null)
+  const [loading, setLoading] = useState(false)
 
-  const onFinish = (values: any) => {
-    signIn(values);
+  const onFinish = async (values: any) => {
+    setLoading(true)
+    setLoginError(null);
+
+    const res = await signIn(values);
+
+    // If signIn redirected, code below won't run (redirect throws internally)
+    if (res?.ok === false) {
+      setLoginError(res.message);
+    }
+    setLoading(false)
   };
 
   return (
     <>
+      {loginError &&
+        <div className=" shadow-2xs mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex gap-3 items-start">
+          <MdError className="material-symbols-outlined text-red-600 dark:text-red-400 text-lg" />
+
+          <div className="text-sm text-red-800 dark:text-red-300">
+            <Typography.Title
+              level={5}
+              type='danger'
+              className="mb-0!"
+            >
+              Invalid credentials
+            </Typography.Title>
+
+            <Typography.Text type='danger'>Please try again or reset your password.</Typography.Text>
+          </div>
+        </div>
+      }
+
       <header className="mb-10">
         <Typography.Title level={2} className="mb-1!">
           Log in to your account
@@ -102,7 +131,7 @@ export default function LoginPage() {
         </div>
 
         <Form.Item className="mb-0">
-          <Button type="primary" htmlType="submit" size="large" block>
+          <Button loading={loading} type="primary" htmlType="submit" size="large" block>
             Log in
           </Button>
         </Form.Item>

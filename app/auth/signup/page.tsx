@@ -21,9 +21,15 @@ import {
 export default function SignupPage() {
   const [form] = Form.useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-  const onFinish = (values: any) => {
-    signUp(values);
+  const onFinish = async (values: any) => {
+    setLoading(true)
+    const res = await signUp(values);
+    if (res?.ok === false) {
+      console.log(res)
+    }
+    setLoading(false)
   };
 
   return (
@@ -174,7 +180,7 @@ export default function SignupPage() {
         </Form.Item>
 
         <Form.Item className="mb-0">
-          <Button type="primary" htmlType="submit" size="large" block>
+          <Button loading={loading} type="primary" htmlType="submit" size="large" block>
             Create Account
           </Button>
         </Form.Item>

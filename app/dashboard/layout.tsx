@@ -81,7 +81,7 @@ export default function DashboardLayout({
       {
         key: "/settings",
         icon: <MdSettings />,
-        label: <Link href="/settings">Settings</Link>,
+        label: <Link href="/settings/profile">Settings</Link>,
       },
       {
         key: "/logout",

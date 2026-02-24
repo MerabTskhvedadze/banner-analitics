@@ -85,7 +85,7 @@ export default function Page() {
           </Form.Item>
 
           <Form.Item className="mt-2">
-            <Button size="large" type="primary" htmlType="submit" block>
+            <Button loading={loading} size="large" type="primary" htmlType="submit" block>
               Update password
             </Button>
           </Form.Item>

@@ -16,6 +16,7 @@ import {
   Divider,
   Checkbox,
   Typography,
+  message,
 } from "antd";
 
 export default function SignupPage() {
@@ -27,7 +28,8 @@ export default function SignupPage() {
     setLoading(true)
     const res = await signUp(values);
     if (res?.ok === false) {
-      console.log(res)
+      // console.log(res)
+      message.error('Oops! something went wrong, try again later')
     }
     setLoading(false)
   };

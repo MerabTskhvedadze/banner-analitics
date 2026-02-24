@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense } from "react";
 
 function friendlyMessage(error: string | null, errorCode: string | null) {
   // Common OAuth-ish cases across providers
@@ -25,7 +26,7 @@ function friendlyMessage(error: string | null, errorCode: string | null) {
   return "Sign-in didn’t complete. Please try again.";
 }
 
-export default function AuthErrorPage() {
+function AuthErrorContent() {
   const params = useSearchParams();
   const router = useRouter();
 
@@ -51,4 +52,13 @@ export default function AuthErrorPage() {
       <button onClick={() => router.replace("/auth/login")}>Back to login</button>
     </main>
   );
+}
+
+
+export default function Page() {
+  return (
+    <Suspense fallback={null}>
+      <AuthErrorContent />
+    </Suspense>
+  )
 }

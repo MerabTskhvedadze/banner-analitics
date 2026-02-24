@@ -27,16 +27,30 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims()
   const user = data?.claims
 
-  // Example protection:
-  const publicPaths = [
+  const pathname = request.nextUrl.pathname
+
+  const authPages = [
+    "/auth/login",
+    "/auth/signup",
+    "/auth/check-email",
+  ]
+
+  const isAuthPage = authPages.some((p) => pathname.startsWith(p))
+
+  if (user && isAuthPage) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/dashboard"
+    return NextResponse.redirect(url)
+  }
+
+  const publicPrefixes = [
     "/auth/login",
     "/auth/signup",
     "/auth/check-email",
     "/auth/callback",
   ]
 
-  const pathname = request.nextUrl.pathname
-  const isPublic = publicPaths.some((p) => pathname.startsWith(p))
+  const isPublic = publicPrefixes.some((p) => pathname.startsWith(p))
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone()

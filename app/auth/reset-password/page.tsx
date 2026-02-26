@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Form, Input, Typography, message, Space } from "antd";
+import { Button, Form, Input, Typography, message, Space, App } from "antd";
 import { MdArrowBack } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -55,7 +55,12 @@ export default function Page() {
           </p>
         </header>
 
-        <Form<FormValues> layout="vertical" requiredMark={false} onFinish={onFinish} autoComplete="off">
+        <Form<FormValues>
+          layout="vertical"
+          requiredMark={false}
+          onFinish={onFinish}
+          autoComplete="off"
+        >
           <Form.Item
             label={<span className="font-semibold dark:text-slate-200">New password</span>}
             name="password"

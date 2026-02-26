@@ -3,8 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Avatar } from "antd";
-import { MdCreditCard, MdPerson, MdSecurity } from "react-icons/md";
+import { Breadcrumb, Flex } from "antd";
+
+import {
+  MdPerson,
+  MdSecurity,
+  MdDashboard,
+  MdCreditCard,
+} from "react-icons/md";
 
 type NavItem = {
   href: string;
@@ -30,17 +36,33 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
       {/* Main Navigation Bar */}
       <nav className="sticky top-0 z-40 w-full bg-white/80 dark:bg-[#101522]/90 backdrop-blur border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded bg-primary flex items-center justify-center text-white font-bold">
-                A
-              </div>
-              <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">
-                AdAnalyze<span className="text-primary">.ai</span>
-              </span>
-            </div>
+          <div className="flex items-center justify-between h-16 ">
 
-            <Avatar />
+            <Link href={'/dashboard'}>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded bg-primary flex items-center justify-center text-white font-bold">
+                  A
+                </div>
+                <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">
+                  AdAnalyze<span className="text-primary">.ai</span>
+                </span>
+              </div>
+            </Link>
+
+            <Breadcrumb
+              items={[
+                {
+                  href: '/dashboard',
+                  title: (
+                    <Flex align="center" gap={4}>
+                      <MdDashboard className="text-md" />
+                      <span>dashboard</span>
+                    </Flex>
+                  )
+                },
+                { title: pathname.split('/').at(-1) },
+              ]}
+            />
           </div>
         </div>
       </nav>

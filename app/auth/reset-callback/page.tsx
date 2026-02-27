@@ -4,63 +4,37 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
 import { createClient } from "@/lib/supabase/client";
-import { getResetVerificationPayload } from "@/lib/auth/reset-flow";
 
-const RESET_LINK_ERROR_MESSAGE = "This reset link is invalid or expired. Please request a new one.";
+const RESET_LINK_ERROR_MESSAGE =
+  "This reset link is invalid or expired. Please request a new one.";
 
 export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    const run = async () => {
-      const supabase = createClient();
-      const payload = getResetVerificationPayload(window.location.href);
+    const supabase = createClient();
 
-      if (process.env.NEXT_PUBLIC_DEBUG_AUTH === "true") {
-        console.info("[reset-callback] starting", {
-          requestPath: window.location.pathname,
-          branch: payload?.kind ?? "missing-token",
-        });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        router.replace("/auth/reset-password");
       }
+    });
 
-      if (!payload) {
-        await supabase.auth.signOut({ scope: "local" });
+    // Fallback: if Supabase didn't establish a session from the URL, treat as invalid
+    const t = window.setTimeout(async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
         message.error(RESET_LINK_ERROR_MESSAGE);
         router.replace("/auth/forgot-password?error=expired");
-        return;
+      } else {
+        router.replace("/auth/reset-password");
       }
+    }, 1200);
 
-      if (payload.kind === "code") {
-        const { error } = await supabase.auth.exchangeCodeForSession(payload.code);
-
-      if (payload?.kind === "code") {
-        const { error } = await supabase.auth.exchangeCodeForSession(payload.code);
-        if (error) {
-          await supabase.auth.signOut({ scope: "local" });
-          message.error(RESET_LINK_ERROR_MESSAGE);
-          router.replace("/auth/forgot-password?error=expired");
-          return;
-        }
-      }
-
-      if (payload.kind === "otp") {
-        const { error } = await supabase.auth.verifyOtp({
-          token_hash: payload.tokenHash,
-          type: payload.type,
-        });
-
-        if (error) {
-          await supabase.auth.signOut({ scope: "local" });
-          message.error(RESET_LINK_ERROR_MESSAGE);
-          router.replace("/auth/forgot-password?error=expired");
-          return;
-        }
-      }
-
-      router.replace("/auth/reset-password");
+    return () => {
+      subscription.unsubscribe();
+      window.clearTimeout(t);
     };
-
-    run();
   }, [router]);
 
   return (

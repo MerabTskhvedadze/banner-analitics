@@ -2,14 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Form, Input, Typography, message } from "antd";
+import { Button, Form, Input, Spin, Typography, message } from "antd";
 import { createClient } from "@/lib/supabase/client";
+import { OTPProps } from "antd/es/input/OTP";
+import { MinusOutlined } from "@ant-design/icons";
 
 export default function TwoFAClient({ nextPath }: { nextPath: string }) {
   const router = useRouter();
   const [factorId, setFactorId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+
+  console.log(otpCode);
+
 
   useEffect(() => {
     const init = async () => {
@@ -81,7 +87,13 @@ export default function TwoFAClient({ nextPath }: { nextPath: string }) {
     }
   };
 
-  if (!ready) return <main className="p-6">Preparing 2FA…</main>;
+  if (!ready) {
+    return (
+      <main className="w-fit mx-auto">
+        <Spin size="large" />
+      </main>
+    )
+  };
 
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-6">
@@ -90,8 +102,16 @@ export default function TwoFAClient({ nextPath }: { nextPath: string }) {
         <p className="text-slate-500 mb-6">Enter the 6-digit code from your authenticator app.</p>
 
         <Form layout="vertical" requiredMark={false} onFinish={onFinish}>
-          <Form.Item label="Code" name="code" rules={[{ required: true, message: "Enter your code." }]}>
-            <Input inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="123456" />
+          <Form.Item name="code" rules={[{ required: true, message: "Enter your code." }]}>
+            <Input.OTP
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              length={6}
+              className="mt-2!"
+              type="input"
+              size="large"
+              separator={(i) => i === 2 ? <MinusOutlined /> : null}
+            />
           </Form.Item>
 
           <Button type="primary" htmlType="submit" loading={loading} block>

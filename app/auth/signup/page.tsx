@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { signUp } from '@/components/auth/actions'
+import { signUp } from '@/lib/user-actions'
 
 import { FcGoogle } from "react-icons/fc";
 import { BsLinkedin } from "react-icons/bs";
@@ -28,8 +28,8 @@ export default function SignupPage() {
     setLoading(true)
     const res = await signUp(values);
     if (res?.ok === false) {
-      // console.log(res)
-      message.error('Oops! something went wrong, try again later')
+      console.log(res)
+      message.error(res.message)
     }
     setLoading(false)
   };

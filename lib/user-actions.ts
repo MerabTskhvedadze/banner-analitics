@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
+
 export async function signIn(values: any) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({
@@ -16,41 +17,6 @@ export async function signIn(values: any) {
 
   redirect("/dashboard");
 }
-
-// export async function signUp(formData: any) {
-//   const supabase = await createClient()
-
-//   const { email, password, confirmPassword, ...rest } = formData
-
-//   // password matching re-check (more secured)
-//   if (password !== confirmPassword) {
-//     redirect('/auth/signup?error=password_mismatch')
-//   }
-
-//   const { data, error } = await supabase.auth.signUp({
-//     email,
-//     password,
-//     options: {
-//       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-//       data: { ...rest },
-//     },
-//   })
-
-//   if (error) {
-//     console.log(error)
-//     redirect('/auth/signup?error=1')
-//   }
-
-
-//   if (!data.session) {
-//     //* a page that tells user to verify
-//     redirect("/auth/check-email")
-//     return
-//   }
-
-//   // If you ever disable confirmat
-//   redirect('/dashboard')
-// }
 
 export async function signUp(values: any) {
   const supabase = await createClient();

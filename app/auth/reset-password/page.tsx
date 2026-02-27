@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Form, Input, Typography, message, Space } from "antd";
+import { Button, Form, Input, Typography, message, Space, Spin } from "antd";
 import { MdArrowBack } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { setNewPassword } from "@/components/auth/actions";
+import { setNewPassword } from "@/lib/user-actions";
 
 type FormValues = { password: string; confirm: string };
 
@@ -40,7 +40,7 @@ export default function Page() {
   if (!ready) {
     return (
       <main className="flex-1 flex items-center justify-center p-6">
-        <p>Preparing reset…</p>
+        <Spin size="large" />
       </main>
     );
   }

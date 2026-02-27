@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Form, Input, Spin, Typography, message } from "antd";
 import { createClient } from "@/lib/supabase/client";
-import { OTPProps } from "antd/es/input/OTP";
 import { MinusOutlined } from "@ant-design/icons";
 
 export default function TwoFAClient({ nextPath }: { nextPath: string }) {

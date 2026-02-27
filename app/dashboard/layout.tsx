@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { signOut } from '@/components/auth/actions'
+import { signOut } from '@/lib/user-actions'
 
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { signIn } from '@/components/auth/actions'
+import { signIn } from "@/lib/user-actions";
 
 import { FcGoogle } from "react-icons/fc";
 
@@ -23,11 +23,11 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<null | string>(null)
   const [loading, setLoading] = useState(false)
-
+  
   const onFinish = async (values: any) => {
     setLoading(true)
     setLoginError(null);
-
+    
     const res = await signIn(values);
 
     // If signIn redirected, code below won't run (redirect throws internally)

@@ -2,11 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import { createClient } from "@/lib/supabase/client";
-
-const RESET_LINK_ERROR_MESSAGE =
-  "This reset link is invalid or expired. Please request a new one.";
 
 export default function Page() {
   const router = useRouter();
@@ -24,7 +21,7 @@ export default function Page() {
     const t = window.setTimeout(async () => {
       const { data } = await supabase.auth.getSession();
       if (!data.session) {
-        message.error(RESET_LINK_ERROR_MESSAGE);
+        message.error("This reset link is invalid or expired. Please request a new one.");
         router.replace("/auth/forgot-password?error=expired");
       } else {
         router.replace("/auth/reset-password");
@@ -39,7 +36,7 @@ export default function Page() {
 
   return (
     <main className="flex-1 flex items-center justify-center p-6">
-      <p>Opening reset password…</p>
+      <Spin size="large"/>
     </main>
   );
 }

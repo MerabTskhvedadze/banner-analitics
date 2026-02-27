@@ -33,6 +33,8 @@ export default function Page() {
       if (payload.kind === "code") {
         const { error } = await supabase.auth.exchangeCodeForSession(payload.code);
 
+      if (payload?.kind === "code") {
+        const { error } = await supabase.auth.exchangeCodeForSession(payload.code);
         if (error) {
           await supabase.auth.signOut({ scope: "local" });
           message.error(RESET_LINK_ERROR_MESSAGE);

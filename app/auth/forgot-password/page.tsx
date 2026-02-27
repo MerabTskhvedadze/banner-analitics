@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button, Form, Input, Typography, message, Space, App } from "antd";
 import { MdArrowBack } from "react-icons/md";
-import { requestPasswordReset } from "@/components/auth/actions";
+import { requestPasswordReset } from "@/lib/user-actions";
 
 type FormValues = {
   email: string;
@@ -15,8 +15,10 @@ export default function Page() {
   const onFinish = async ({ email }: FormValues) => {
     setLoading(true)
     const res = await requestPasswordReset({ email });
-    if (res.ok) message.success(res.message);
-    else message.error(res.message);
+
+    if (res.ok) message.success(res.message)
+    else message.error(res.message)
+
     setLoading(false)
   };
 
@@ -24,11 +26,12 @@ export default function Page() {
     <App>
       <main className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-background-dark p-6">
         <div className="w-full max-w-md">
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold mb-3 dark:text-white">Forgot your password?</h2>
-            <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
+          <header className="mb-5">
+            <Typography.Title level={2} className="mb-2!">Forgot your password?</Typography.Title>
+
+            <Typography.Text type='secondary'>
               Enter your email and we’ll send a link to reset your password.
-            </p>
+            </Typography.Text>
           </header>
 
           <Form<FormValues>

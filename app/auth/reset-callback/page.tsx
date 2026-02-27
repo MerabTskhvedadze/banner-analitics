@@ -2,48 +2,41 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import { createClient } from "@/lib/supabase/client";
 
 export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    const run = async () => {
-      const supabase = createClient();
+    const supabase = createClient();
 
-      const sp = new URLSearchParams(window.location.search);
-      const code = sp.get("code");
-
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-        if (error) {
-          message.error("This reset link is invalid or expired. Please request a new one.");
-          router.replace("/auth/forgot-password?error=expired");
-          return;
-        }
-
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
         router.replace("/auth/reset-password");
-        return;
       }
+    });
 
+    // Fallback: if Supabase didn't establish a session from the URL, treat as invalid
+    const t = window.setTimeout(async () => {
       const { data } = await supabase.auth.getSession();
       if (!data.session) {
         message.error("This reset link is invalid or expired. Please request a new one.");
         router.replace("/auth/forgot-password?error=expired");
-        return;
+      } else {
+        router.replace("/auth/reset-password");
       }
+    }, 1200);
 
-      router.replace("/auth/reset-password");
+    return () => {
+      subscription.unsubscribe();
+      window.clearTimeout(t);
     };
-
-    run();
   }, [router]);
 
   return (
     <main className="flex-1 flex items-center justify-center p-6">
-      <p>Opening reset password…</p>
+      <Spin size="large"/>
     </main>
   );
 }

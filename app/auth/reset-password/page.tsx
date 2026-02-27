@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Form, Input, Typography, message, Space, App } from "antd";
+import { Button, Form, Input, Typography, message, Space, Spin } from "antd";
 import { MdArrowBack } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { setNewPassword } from "@/components/auth/actions";
+import { setNewPassword } from "@/lib/user-actions";
 
 type FormValues = { password: string; confirm: string };
 
 export default function Page() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const check = async () => {
@@ -20,6 +20,7 @@ export default function Page() {
       const { data } = await supabase.auth.getSession();
 
       if (!data.session) {
+        await supabase.auth.signOut({ scope: "local" });
         message.error("This reset link is invalid or expired. Please request a new one.");
         router.replace("/auth/forgot-password?error=expired");
         return;
@@ -30,17 +31,16 @@ export default function Page() {
   }, [router]);
 
   const onFinish = async (values: FormValues) => {
-    setLoading(true)
+    setLoading(true);
     const res = await setNewPassword(values);
     if (res?.ok === false) message.error(res.message);
-    setLoading(false)
-    // on success the server action redirects
+    setLoading(false);
   };
 
   if (!ready) {
     return (
       <main className="flex-1 flex items-center justify-center p-6">
-        <p>Preparing reset…</p>
+        <Spin size="large" />
       </main>
     );
   }
@@ -55,12 +55,7 @@ export default function Page() {
           </p>
         </header>
 
-        <Form<FormValues>
-          layout="vertical"
-          requiredMark={false}
-          onFinish={onFinish}
-          autoComplete="off"
-        >
+        <Form<FormValues> layout="vertical" requiredMark={false} onFinish={onFinish} autoComplete="off">
           <Form.Item
             label={<span className="font-semibold dark:text-slate-200">New password</span>}
             name="password"

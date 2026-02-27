@@ -1,4 +1,3 @@
-
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -29,7 +28,16 @@ export async function updateSession(request: NextRequest) {
   const { data: claimsData } = await supabase.auth.getClaims();
   const user = claimsData?.claims ?? null;
 
-  // Logged-out public routes (no /auth/2fa)
+  const isAuthRoute = pathname.startsWith("/auth/");
+  const is2faPage = pathname.startsWith("/auth/2fa");
+
+  const isResetRoute =
+    pathname.startsWith("/auth/reset-callback") ||
+    pathname.startsWith("/auth/reset-password") ||
+    pathname.startsWith("/auth/forgot-password") ||
+    pathname.startsWith("/auth/error");
+
+  // Logged-out public routes
   const publicWhenLoggedOut = [
     "/auth/login",
     "/auth/signup",
@@ -42,23 +50,18 @@ export async function updateSession(request: NextRequest) {
   ];
 
   const isPublicWhenLoggedOut = publicWhenLoggedOut.some((p) => pathname.startsWith(p));
-  const isAuthRoute = pathname.startsWith("/auth/");
-  const is2faPage = pathname.startsWith("/auth/2fa");
 
   // 1) Logged out
   if (!user) {
-    if (is2faPage || (!isPublicWhenLoggedOut && !pathname.startsWith("/auth/"))) {
-      // If it's not one of the allowed public auth pages, send to login.
+    if (is2faPage || (!isPublicWhenLoggedOut && !isAuthRoute)) {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/login";
       if (!isPublicWhenLoggedOut) url.searchParams.set("next", pathname);
       return NextResponse.redirect(url);
     }
 
-    // If it is a public auth page, allow.
     if (isPublicWhenLoggedOut) return supabaseResponse;
 
-    // Any other /auth/* route should go to login as well
     if (isAuthRoute) {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/login";
@@ -72,8 +75,15 @@ export async function updateSession(request: NextRequest) {
   const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
   const needsStepUp = aal?.nextLevel === "aal2" && aal?.currentLevel !== "aal2";
 
-  // 2a) Step-up required: lock them into /auth/2fa (plus optional signout)
-  const allowedDuringStepUp = ["/auth/2fa", "/auth/signout"];
+  // If step-up is required, allow reset/error routes too (so recovery flow can complete)
+  const allowedDuringStepUp = [
+    "/auth/2fa",
+    "/auth/signout",
+    "/auth/reset-callback",
+    "/auth/reset-password",
+    "/auth/forgot-password",
+    "/auth/error",
+  ];
   const isAllowedDuringStepUp = allowedDuringStepUp.some((p) => pathname.startsWith(p));
 
   if (needsStepUp) {
@@ -86,17 +96,115 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  // 2b) Step-up NOT required:
-  // - keep user out of ALL /auth/* pages (including /auth/2fa)
-  if (isAuthRoute) {
+  // Step-up not required: keep out of /auth/* EXCEPT reset/error routes
+  if (isAuthRoute && !isResetRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
-  // - normal protected routing: if they are logged in, allow
   return supabaseResponse;
 }
+
+
+// import { createServerClient } from "@supabase/ssr";
+// import { NextResponse, type NextRequest } from "next/server";
+
+// export async function updateSession(request: NextRequest) {
+//   let supabaseResponse = NextResponse.next({ request });
+
+//   const supabase = createServerClient(
+//     process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+//     {
+//       cookies: {
+//         getAll() {
+//           return request.cookies.getAll();
+//         },
+//         setAll(cookiesToSet) {
+//           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+//           supabaseResponse = NextResponse.next({ request });
+//           cookiesToSet.forEach(({ name, value, options }) => {
+//             supabaseResponse.cookies.set(name, value, options);
+//           });
+//         },
+//       },
+//     }
+//   );
+
+//   const pathname = request.nextUrl.pathname;
+
+//   const { data: claimsData } = await supabase.auth.getClaims();
+//   const user = claimsData?.claims ?? null;
+
+//   // Logged-out public routes (no /auth/2fa)
+//   const publicWhenLoggedOut = [
+//     "/auth/login",
+//     "/auth/signup",
+//     "/auth/check-email",
+//     "/auth/callback",
+//     "/auth/error",
+//     "/auth/reset-callback",
+//     "/auth/reset-password",
+//     "/auth/forgot-password",
+//   ];
+
+//   const isPublicWhenLoggedOut = publicWhenLoggedOut.some((p) => pathname.startsWith(p));
+//   const isAuthRoute = pathname.startsWith("/auth/");
+//   const is2faPage = pathname.startsWith("/auth/2fa");
+
+//   // 1) Logged out
+//   if (!user) {
+//     if (is2faPage || (!isPublicWhenLoggedOut && !pathname.startsWith("/auth/"))) {
+//       // If it's not one of the allowed public auth pages, send to login.
+//       const url = request.nextUrl.clone();
+//       url.pathname = "/auth/login";
+//       if (!isPublicWhenLoggedOut) url.searchParams.set("next", pathname);
+//       return NextResponse.redirect(url);
+//     }
+
+//     // If it is a public auth page, allow.
+//     if (isPublicWhenLoggedOut) return supabaseResponse;
+
+//     // Any other /auth/* route should go to login as well
+//     if (isAuthRoute) {
+//       const url = request.nextUrl.clone();
+//       url.pathname = "/auth/login";
+//       return NextResponse.redirect(url);
+//     }
+
+//     return supabaseResponse;
+//   }
+
+//   // 2) Logged in -> check AAL
+//   const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+//   const needsStepUp = aal?.nextLevel === "aal2" && aal?.currentLevel !== "aal2";
+
+//   // 2a) Step-up required: lock them into /auth/2fa (plus optional signout)
+//   const allowedDuringStepUp = ["/auth/2fa", "/auth/signout"];
+//   const isAllowedDuringStepUp = allowedDuringStepUp.some((p) => pathname.startsWith(p));
+
+//   if (needsStepUp) {
+//     if (!isAllowedDuringStepUp) {
+//       const url = request.nextUrl.clone();
+//       url.pathname = "/auth/2fa";
+//       url.searchParams.set("next", pathname);
+//       return NextResponse.redirect(url);
+//     }
+//     return supabaseResponse;
+//   }
+
+//   // 2b) Step-up NOT required:
+//   // - keep user out of ALL /auth/* pages (including /auth/2fa)
+//   if (isAuthRoute) {
+//     const url = request.nextUrl.clone();
+//     url.pathname = "/dashboard";
+//     return NextResponse.redirect(url);
+//   }
+
+//   // - normal protected routing: if they are logged in, allow
+//   return supabaseResponse;
+// }
 
 
 

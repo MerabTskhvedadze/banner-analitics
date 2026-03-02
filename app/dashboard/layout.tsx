@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { signOut } from '@/lib/user-actions'
+import { signOut } from "@/lib/user-actions";
+import { createClient } from "@/lib/supabase/client";
 
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
@@ -13,11 +14,9 @@ import {
   Flex,
   Menu,
   Button,
-  Avatar,
   Layout,
   Tooltip,
   Divider,
-  Typography,
   Breadcrumb,
   BreadcrumbProps,
 } from "antd";
@@ -26,13 +25,14 @@ import {
   MdToll,
   MdWallet,
   MdLogout,
-  MdPerson,
   MdHistory,
   MdSettings,
   MdAnalytics,
   MdDashboard,
   MdAutoFixHigh,
 } from "react-icons/md";
+import { User } from "@supabase/supabase-js";
+import UserDropdown from "@/components/UserDropdown";
 
 const { Header, Sider, Content } = Layout;
 
@@ -40,55 +40,31 @@ type MenuRoutes = {
   key: string;
   icon: React.ReactNode;
   label: React.ReactNode;
+  onClick?: () => void; // <-- add this since you use onClick in secondaryRoutes
 };
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [collapsed, setCollapsed] = useState(false);
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const supabase = useMemo(() => createClient(), []);
+  const [user, setUser] = useState<User | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
   const pathname = usePathname();
+  const [collapsed, setCollapsed] = useState(false);
 
   const mainRoutes: MenuRoutes[] = useMemo(
     () => [
-      {
-        key: "/dashboard",
-        icon: <MdDashboard />,
-        label: <Link href="/dashboard">Dashboard</Link>,
-      },
-      {
-        key: "/dashboard/analytics",
-        icon: <MdAnalytics />,
-        label: <Link href="/dashboard/analytics">Analytics</Link>,
-      },
-      {
-        key: "/dashboard/history",
-        icon: <MdHistory />,
-        label: <Link href="/dashboard/history">History</Link>,
-      },
-      {
-        key: "/dashboard/billing",
-        icon: <MdWallet />,
-        label: <Link href="/dashboard/billing">Buy tokens</Link>,
-      },
+      { key: "/dashboard", icon: <MdDashboard />, label: <Link href="/dashboard">Dashboard</Link> },
+      { key: "/dashboard/analytics", icon: <MdAnalytics />, label: <Link href="/dashboard/analytics">Analytics</Link> },
+      { key: "/dashboard/history", icon: <MdHistory />, label: <Link href="/dashboard/history">History</Link> },
+      { key: "/dashboard/billing", icon: <MdWallet />, label: <Link href="/dashboard/billing">Buy tokens</Link> },
     ],
     []
   );
 
   const secondaryRoutes: MenuRoutes[] = useMemo(
     () => [
-      {
-        key: "/settings",
-        icon: <MdSettings />,
-        label: <Link href="/settings/profile">Settings</Link>,
-      },
-      {
-        key: "/logout",
-        icon: <MdLogout />,
-        label: <span>Logout</span>,
-        onClick: () => signOut(),
-      },
+      { key: "/settings", icon: <MdSettings />, label: <Link href="/settings/profile">Settings</Link> },
+      { key: "/logout", icon: <MdLogout />, label: <span>Logout</span>, onClick: () => signOut() },
     ],
     []
   );
@@ -120,6 +96,35 @@ export default function DashboardLayout({
     return match ? breadcrumbMap[match] : [{ title: "Dashboard" }];
   }, [pathname, breadcrumbMap]);
 
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      setLoadingUser(true);
+      try {
+        const { data, error } = await supabase.auth.getUser();
+        if (!mounted) return;
+
+        if (error) setUser(null);
+        else setUser(data.user);
+      } finally {
+        if (mounted) setLoadingUser(false);
+      }
+    })();
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      // optional: show loading briefly if you want
+      setLoadingUser(true);
+      setUser(session?.user ?? null);
+      setLoadingUser(false);
+    });
+
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
+  }, [supabase]);
+
   return (
     <Layout className="h-screen overflow-hidden">
       <Sider
@@ -129,9 +134,7 @@ export default function DashboardLayout({
         collapsible
         collapsed={collapsed}
       >
-        {/* Make the whole sider a column and full height */}
         <div className="flex h-full flex-col">
-          {/* Logo */}
           <div className="h-16 flex items-center px-4">
             <Tooltip title={collapsed ? "BannerScoreAI" : ""} placement="right">
               <Link href="/dashboard" className="w-full">
@@ -142,15 +145,12 @@ export default function DashboardLayout({
                   ].join(" ")}
                 >
                   <MdAutoFixHigh className="text-2xl shrink-0" />
-                  {!collapsed && (
-                    <span className="whitespace-nowrap">BannerScoreAI</span>
-                  )}
+                  {!collapsed && <span className="whitespace-nowrap">BannerScoreAI</span>}
                 </div>
               </Link>
             </Tooltip>
           </div>
 
-          {/* Main menu */}
           <Menu
             className="border-0!"
             theme="light"
@@ -159,7 +159,6 @@ export default function DashboardLayout({
             items={mainRoutes}
           />
 
-          {/* Push this section to the bottom */}
           <div className="mt-auto">
             <div className="mx-2 my-2 border-t border-slate-100 dark:border-slate-800" />
             <Menu
@@ -188,40 +187,22 @@ export default function DashboardLayout({
             </Flex>
 
             <Flex align="center">
-              <Tag className="rounded-full! sm:inline-flex items-center px-3! py-1.5! font-semibold text-sm! border border-primary/20! bg-primary/10! text-primary!">
+              <Tag className="rounded-full! sm:inline-flex items-center px-3! py-0.5! font-semibold text-sm! border border-primary/20! bg-primary/10! text-primary!">
                 <Flex align="center" gap={2}>
-                  <MdToll className="text-base mr-1.5" />
-                  <span className="mr-1 pr-2 border-r border-primary/20">450 Tokens</span>
-
-                  <button
-                    type="button"
-                    className="text-xs hover:underline uppercase font-bold tracking-wide text-primary"
-                    onClick={() => { }}
-                  >
-                    Top Up
-                  </button>
+                  <MdToll className="text-base" />
+                  <span className=" border-primary/20">450 Tokens</span>
                 </Flex>
               </Tag>
 
               <Divider orientation="vertical" />
 
-              <Flex align="center" gap={8}>
-                <Typography.Text color="inherit" className="font-semibold">
-                  John Doe
-                </Typography.Text>
-
-                <Avatar>
-                  <MdPerson />
-                </Avatar>
-              </Flex>
+              <UserDropdown isLoading={loadingUser} username={user?.user_metadata.name} />
             </Flex>
           </Flex>
         </Header>
 
-        <Content className="p-4 max-w-7xl w-full mx-auto overflow-y-auto">
-          {children}
-        </Content>
+        <Content className="p-4 max-w-7xl w-full mx-auto overflow-y-auto">{children}</Content>
       </Layout>
-    </Layout >
+    </Layout>
   );
 }

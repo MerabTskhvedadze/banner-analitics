@@ -190,7 +190,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Tag className="rounded-full! sm:inline-flex items-center px-3! py-0.5! font-semibold text-sm! border border-primary/20! bg-primary/10! text-primary!">
                 <Flex align="center" gap={2}>
                   <MdToll className="text-base" />
-                  <span className=" border-primary/20">450 Tokens</span>
+                  <span className=" border-primary/20">tokens</span>
                 </Flex>
               </Tag>
 

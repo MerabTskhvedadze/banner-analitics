@@ -1,6 +1,5 @@
 "use client";
 
-// import { useState } from "react";
 import { StatsList } from "@/components/dashboard";
 import { CandleChart, PieChart } from "@/components/ui";
 import { Button, Typography } from "antd";
@@ -9,7 +8,6 @@ import {
   MdChevronLeft,
   MdChevronRight,
   MdAddPhotoAlternate,
-  MdArrowRight,
 } from "react-icons/md";
 
 import { DataTable, type Column } from '@/components/ui/Table';
@@ -26,12 +24,6 @@ type RecentRow = {
 };
 
 export default function Page() {
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  // const [uploading, setUploading] = useState(false);
-  // const onUploadClick = async () => {
-  //   console.log(selectedFile);
-  // };
-
   const recentData: RecentRow[] = [
     {
       id: "1",
@@ -104,7 +96,7 @@ export default function Page() {
 
   return (
     <main className="flex flex-col gap-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <Typography.Title level={2} className="mb-0!">Dashboard Overview</Typography.Title>
           <Typography.Text className="mb-0!" type="secondary">
@@ -124,46 +116,7 @@ export default function Page() {
 
       <StatsList />
 
-      {/* Upload Banner */}
-      {/* <div className="p-4 bg-white rounded-2xl shadow-md flex flex-col gap-4">
-        <div className="flex flex-col md:flex-row items-start justify-between gap-4">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-              <MdOutlineCloudUpload className="text-2xl" />
-            </div>
-
-            <div className="flex flex-col">
-              <Typography.Title className="mb-0!" level={4}>Upload Banner</Typography.Title>
-              <Typography.Text className="mb-0!">
-                Drag and drop your marketing assets here for AI analysis.
-              </Typography.Text>
-              <Typography.Text className="mb-0!">
-                Supports: PNG, JPG, WebP (Max 10MB)
-              </Typography.Text>
-              <Typography.Text className="mb-0!" type="warning">
-                <span className="font-bold">Costs:</span> 10 Tokens Per Analysis
-              </Typography.Text>
-            </div>
-          </div>
-
-          <Button
-            size="middle"
-            type="primary"
-            onClick={onUploadClick}
-            icon={<MdAddCircle />}
-            className="w-full md:w-auto"
-          >
-            Analyze New Banner
-          </Button>
-        </div>
-
-        <ImgUpload
-          onFileSelect={(file) => setSelectedFile(file)}
-          onClear={() => setSelectedFile(null)}
-          variant="inline"
-        />
-      </div> */}
-
+      {/* //* **** charts ****  */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="md:col-span-1 lg:col-span-2">
           <CandleChart
@@ -194,6 +147,7 @@ export default function Page() {
         </div>
       </div>
 
+      {/* //* **** history table ****  */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between gap-2">
           <Typography.Title level={4} className="mb-0!">Recent Analysis</Typography.Title>

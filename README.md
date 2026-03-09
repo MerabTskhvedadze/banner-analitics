@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Banner Analytics (BannerScoreAI)
 
-## Getting Started
+Banner Analytics is a Next.js web app for **AI-assisted banner / ad creative analysis**. The goal is to let users upload a banner, get a score + recommendations, and track analysis history and token usage in a dashboard.
 
-First, run the development server:
+## What it does (today)
+
+- **Landing page**: Marketing-style homepage describing the product concept (`/`).
+- **Auth**: Supabase auth flows with UI for login/signup, password reset, and a 2FA step-up page (`/auth/*`).
+- **Dashboard shell**: Dashboard layout + overview UI with charts/table currently powered by **mock/sample data** (`/dashboard`).
+- **Settings shell**: Settings routes exist (profile/billing/security) but are currently minimal/stubbed (`/settings/*`).
+
+## Project stage
+
+**Stage: UI + auth scaffolding (early MVP).**
+
+Implemented:
+- Supabase email/password auth via Next.js server actions (`lib/user-actions.ts`)
+- Auth routing rules (logged-in/out, MFA step-up) (`lib/auth/auth-routing.ts`)
+- Dashboard layout, navigation, and reusable UI components (charts, tables, image upload)
+
+In progress / missing:
+- Real “upload banner → analyze → persist results” pipeline (no server/API for AI analysis yet)
+- Dashboard pages beyond the overview (`/dashboard/analytics`, `/dashboard/history`, `/dashboard/billing` are placeholders)
+- Route protection middleware is drafted in `proxy.ts` but **not wired into Next.js** (Next expects `middleware.ts`)
+- Payments/token purchasing integration (UI only)
+
+## Tech stack
+
+- **Next.js** (App Router)
+- **React**
+- **TypeScript**
+- **Ant Design** (+ `@ant-design/nextjs-registry`)
+- **Tailwind CSS**
+- **Supabase** (`@supabase/ssr`)
+- **GSAP** (animations)
+
+## Running locally
+
+### 1) Install dependencies
+
+```bash
+npm ci
+```
+
+### 2) Configure environment variables
+
+Create a `.env.local` (recommended) with at least:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_SITE_URL` (e.g. `http://localhost:3000`)
+
+If you enable OAuth providers in Supabase (e.g. LinkedIn), ensure the provider redirect/callback URLs match:
+- `${NEXT_PUBLIC_SITE_URL}/auth/callback`
+
+### 3) Start dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Useful scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev    # start dev server
+npm run build  # production build
+npm run start  # run production server
+npm run lint   # eslint
+```
 
-## Learn More
+## Routes (current)
 
-To learn more about Next.js, take a look at the following resources:
+- **Public**
+  - `/` – landing page
+  - `/auth/login`, `/auth/signup`
+  - `/auth/forgot-password`, `/auth/reset-password`, `/auth/reset-callback`
+  - `/auth/check-email`, `/auth/callback`, `/auth/error`
+- **App**
+  - `/dashboard` – overview (mock data)
+  - `/dashboard/analytics` – placeholder
+  - `/dashboard/history` – placeholder
+  - `/dashboard/billing` – placeholder
+  - `/settings/profile` – minimal
+  - `/settings/billing`, `/settings/security` – minimal/stubbed
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Repo layout
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `app/` – Next.js routes (App Router)
+- `components/` – UI + page components
+- `lib/` – Supabase clients, auth routing, server actions
 
-## Deploy on Vercel
+## Contributing notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Keep secrets out of git. Prefer `.env.local` and do not commit real Supabase keys.
+- When implementing new routes, keep auth rules in sync with `lib/auth/auth-routing.ts`.

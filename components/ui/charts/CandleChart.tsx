@@ -213,14 +213,18 @@ export function CandleChart({
 
       <div
         className={[
-          "flex justify-between mt-4 px-2 text-xs text-slate-400 dark:text-slate-500 font-medium",
-          range === "30d" ? "gap-1" : "",
+          "flex justify-between px-2 text-xs text-slate-400 dark:text-slate-500 font-medium",
+          range === "30d" ? "gap-1" : "gap-4",
         ].join(" ")}
+
       >
         {points.map((pt, i) => {
           const isPeak = i === maxIndex;
           return (
-            <span key={`${pt.label}-x-${i}`} className={isPeak ? "text-primary font-bold" : ""}>
+            <span
+              key={`${pt.label}-x-${i}`}
+              className={`flex w-full items-center justify-center ${isPeak ? "text-primary font-bold" : " "}`}
+            >
               {pt.label}
             </span>
           );

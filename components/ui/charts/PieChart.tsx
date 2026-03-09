@@ -46,7 +46,7 @@ export function PieChart({
 
   return (
     <div className="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-border-dark p-6 shadow-sm flex flex-col">
-      <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{title}</h2>
+      <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-0!">{title}</h2>
 
       <div className="relative w-40 h-40 mx-auto mb-6">
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
@@ -81,7 +81,7 @@ export function PieChart({
         </div>
       </div>
 
-      <div className="space-y-4 flex-1">
+      <div className="space-y-3.5 flex-1">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-primary" />
@@ -102,7 +102,7 @@ export function PieChart({
           </span>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 pt-1">
+        <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 pt-[2.92px]">
           <span>Total</span>
           <span className="font-medium">{total.toLocaleString()} TKN</span>
         </div>

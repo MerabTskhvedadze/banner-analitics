@@ -167,15 +167,6 @@ export default function ProfileSettingsForm() {
 
           <Col xs={24} md={12}>
             <Form.Item
-              label={<Typography.Text className="font-semibold">Company</Typography.Text>}
-              name="company"
-            >
-              <Input size="large" placeholder="Company name" />
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} md={12}>
-            <Form.Item
               label={<Typography.Text className="font-semibold">Profession</Typography.Text>}
               name="profession"
             >
@@ -203,7 +194,7 @@ export default function ProfileSettingsForm() {
               name="bio"
             >
               <Input.TextArea
-                rows={5}
+                rows={3}
                 showCount
                 maxLength={300}
                 placeholder="Tell us a little about your work."

@@ -17,7 +17,7 @@ const PageHeader = ({
 }: PageHeaderProps) => {
   return (
     <div id={id} className={className}>
-      <Typography.Title level={2} className='mb-2! text-2xl! leading-tight! sm:text-3xl! lg:text-4xl!'>
+      <Typography.Title level={2} className='mb-2! text-xl! leading-tight! sm:text-2xl! lg:text-3xl!'>
         {title}
       </Typography.Title>
       <Typography.Text className='block text-sm! leading-6! sm:text-base!' type='secondary'>

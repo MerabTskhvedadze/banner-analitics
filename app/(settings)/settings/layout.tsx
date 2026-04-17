@@ -81,7 +81,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
                     className={cx(
-                      "group flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition",
+                      "w-fit group flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition",
                       !isActive &&
                       "text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/50",
                       isActive &&

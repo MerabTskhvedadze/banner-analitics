@@ -19,8 +19,8 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { href: "/settings/profile", label: "Profile", icon: <MdPerson className="text-xl" /> },
-  { href: "/settings/billing", label: "Billing & Tokens", icon: <MdCreditCard className="text-xl" /> },
+  { href: "#", label: "Profile", icon: <MdPerson className="text-xl" /> },
+  { href: "", label: "Billing & Tokens", icon: <MdCreditCard className="text-xl" /> },
   { href: "/settings/security", label: "Security", icon: <MdSecurity className="text-xl" /> },
 ];
 
@@ -70,7 +70,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           {/* Sidebar Navigation */}
-          <aside className="lg:col-span-3">
+          <aside className="lg:col-span-3 hidden lg:block ">
             <nav className="space-y-1 sticky top-[96.5px]">
               {navItems.map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -97,9 +97,10 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
           </aside>
 
           {/* Main Content Area */}
-          <main className="lg:col-span-9 space-y-6 mt-6 lg:mt-0">{children}</main>
+          <main className="lg:col-span-9 space-y-6 lg:mt-0">{children}</main>
         </div>
       </div>
     </div>
   );
+
 }

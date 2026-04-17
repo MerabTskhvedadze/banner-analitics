@@ -27,7 +27,6 @@ import {
   MdLogout,
   MdHistory,
   MdSettings,
-  MdAnalytics,
   MdDashboard,
   MdAutoFixHigh,
 } from "react-icons/md";
@@ -54,7 +53,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const mainRoutes: MenuRoutes[] = useMemo(
     () => [
       { key: "/dashboard", icon: <MdDashboard />, label: <Link href="/dashboard">Dashboard</Link> },
-      { key: "/dashboard/analytics", icon: <MdAnalytics />, label: <Link href="/dashboard/analytics">Analytics</Link> },
       { key: "/dashboard/history", icon: <MdHistory />, label: <Link href="/dashboard/history">History</Link> },
       { key: "/dashboard/billing", icon: <MdWallet />, label: <Link href="/dashboard/billing">Buy tokens</Link> },
     ],
@@ -63,7 +61,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const secondaryRoutes: MenuRoutes[] = useMemo(
     () => [
-      { key: "/settings", icon: <MdSettings />, label: <Link href="/settings/profile">Settings</Link> },
+      { key: "/settings", icon: <MdSettings />, label: <Link href="/settings">Settings</Link> },
       { key: "/logout", icon: <MdLogout />, label: <span>Logout</span>, onClick: () => signOut() },
     ],
     []

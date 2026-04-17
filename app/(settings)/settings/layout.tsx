@@ -1,8 +1,7 @@
 'use client'
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Breadcrumb, Flex } from "antd";
 
 import {
@@ -14,14 +13,15 @@ import {
 
 type NavItem = {
   href: string;
+  id: string;
   label: string;
   icon: React.ReactNode;
 };
 
 const navItems: NavItem[] = [
-  { href: "#", label: "Profile", icon: <MdPerson className="text-xl" /> },
-  { href: "", label: "Billing & Tokens", icon: <MdCreditCard className="text-xl" /> },
-  { href: "/settings/security", label: "Security", icon: <MdSecurity className="text-xl" /> },
+  { href: "#profile-settings", id: "profile-settings", label: "Profile", icon: <MdPerson className="text-xl" /> },
+  { href: "#billing-settings", id: "billing-settings", label: "Billing & Tokens", icon: <MdCreditCard className="text-xl" /> },
+  { href: "#security-settings", id: "security-settings", label: "Security", icon: <MdSecurity className="text-xl" /> },
 ];
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -29,7 +29,6 @@ function cx(...classes: Array<string | false | null | undefined>) {
 }
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-100 min-h-screen flex flex-col">
@@ -60,7 +59,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
                     </Flex>
                   )
                 },
-                { title: pathname.split('/').at(-1) },
+                { title: 'Settings' },
               ]}
             />
           </div>
@@ -73,19 +72,12 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
           <aside className="lg:col-span-3 hidden lg:block ">
             <nav className="space-y-1 sticky top-[96.5px]">
               {navItems.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    aria-current={isActive ? "page" : undefined}
                     className={cx(
                       "w-fit group flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition",
-                      !isActive &&
-                      "text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/50",
-                      isActive &&
-                      "bg-primary/10 text-primary dark:bg-primary/20 dark:text-blue-300"
                     )}
                   >
                     {item.icon}

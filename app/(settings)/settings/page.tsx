@@ -13,10 +13,9 @@ export default function Page() {
   return (
     <App>
       <main>
-        <section>
+        <section id="profile-settings" className="scroll-mt-24">
           <PageHeader
-            className="scroll-mt-20 mb-4"
-            id="profile-settings"
+            className="mb-4"
             title='Profile Settings'
             subtitle='Update your personal information'
           />
@@ -26,10 +25,9 @@ export default function Page() {
           <Divider />
         </section>
 
-        <section>
+        <section id="billing-settings" className="scroll-mt-24">
           <PageHeader
-            className="scroll-mt-20 mb-4"
-            id="billing-settings"
+            className="mb-4"
             title='Billing & Tokens'
             subtitle='Manage your token balance, payment methods and billing history'
           />
@@ -39,10 +37,9 @@ export default function Page() {
           <Divider />
         </section>
 
-        <section>
+        <section id="security-settings" className="scroll-mt-24">
           <PageHeader
-            className="scroll-mt-20 mb-4"
-            id="security-settings"
+            className="mb-4"
             title="Security Settings"
             subtitle="Manage your password and secure your account with 2FA."
           />

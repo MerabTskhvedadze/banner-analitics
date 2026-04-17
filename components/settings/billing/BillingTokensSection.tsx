@@ -1,8 +1,26 @@
 "use client";
 
-import { Button, Card, Col, Divider, Progress, Row, Space, Table, Tag, Typography } from "antd";
+import {
+  Col,
+  Row,
+  Tag,
+  Card,
+  Space,
+  Table,
+  Button,
+  Divider,
+  Progress,
+  Typography
+} from "antd";
+
 import type { ColumnsType } from "antd/es/table";
-import { MdAddCard, MdCreditCard, MdReceiptLong, MdToll, MdTrendingUp } from "react-icons/md";
+import {
+  MdToll,
+  MdAddCard,
+  MdTrendingUp,
+  MdCreditCard,
+  MdReceiptLong,
+} from "react-icons/md";
 
 type TopUpOption = {
   key: string;
@@ -100,7 +118,7 @@ export default function BillingTokensSection() {
   return (
     <Space orientation="vertical" size={24} className="w-full">
       <Row gutter={[16, 16]}>
-        <Col xs={24} xl={14}>
+        <Col xs={24} sm={14}>
           <Space orientation="vertical" size={16} className="w-full">
             <Card>
               <Space orientation="vertical" size={8}>
@@ -135,7 +153,7 @@ export default function BillingTokensSection() {
           </Space>
         </Col>
 
-        <Col xs={24} xl={10}>
+        <Col xs={24} sm={10}>
           <Card
             className="h-full"
             title={

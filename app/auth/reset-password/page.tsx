@@ -13,24 +13,40 @@ export default function Page() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [hasRecoverySession, setHasRecoverySession] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+
     const check = async () => {
       const supabase = createClient();
       const { data } = await supabase.auth.getSession();
+      const isRecoverySession = data.session?.user?.recovery_sent_at != null;
 
-      if (!data.session) {
+      if (!isRecoverySession) {
         await supabase.auth.signOut({ scope: "local" });
         message.error("This reset link is invalid or expired. Please request a new one.");
         router.replace("/auth/forgot-password?error=expired");
         return;
       }
+
+      if (!mounted) return;
+      setHasRecoverySession(true);
       setReady(true);
     };
     check();
+
+    return () => {
+      mounted = false;
+    };
   }, [router]);
 
   const onFinish = async (values: FormValues) => {
+    if (!hasRecoverySession) {
+      message.error("This reset link is invalid or expired. Please request a new one.");
+      return;
+    }
+
     setLoading(true);
     const res = await setNewPassword(values);
     if (res?.ok === false) message.error(res.message);

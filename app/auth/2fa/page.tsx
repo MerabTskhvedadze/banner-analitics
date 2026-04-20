@@ -1,11 +1,12 @@
 import TwoFAClient from "@/components/auth/2fa/TwoFaClient";
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams?: { next?: string };
+  searchParams?: Promise<{ next?: string }>;
 }) {
-  const n = searchParams?.next;
+  const resolvedSearchParams = await searchParams;
+  const n = resolvedSearchParams?.next;
 
   const nextPath = n && n.startsWith("/") ? n : "/dashboard";
 

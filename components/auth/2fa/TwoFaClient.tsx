@@ -11,17 +11,13 @@ export default function TwoFAClient({ nextPath }: { nextPath: string }) {
   const [factorId, setFactorId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
-  const [otpCode, setOtpCode] = useState("");
-
-  console.log(otpCode);
-
 
   useEffect(() => {
     const init = async () => {
       const supabase = createClient();
 
-      const { data: s } = await supabase.auth.getSession();
-      if (!s.session) {
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData.user) {
         router.replace("/auth/login");
         return;
       }
@@ -91,7 +87,7 @@ export default function TwoFAClient({ nextPath }: { nextPath: string }) {
       <main className="w-fit mx-auto">
         <Spin size="large" />
       </main>
-    )
+    );
   };
 
   return (

@@ -20,7 +20,9 @@ export default function Page() {
     // Fallback: if Supabase didn't establish a session from the URL, treat as invalid
     const t = window.setTimeout(async () => {
       const { data } = await supabase.auth.getSession();
-      if (!data.session) {
+      const isRecoverySession = data.session?.user?.recovery_sent_at != null;
+
+      if (!isRecoverySession) {
         message.error("This reset link is invalid or expired. Please request a new one.");
         router.replace("/auth/forgot-password?error=expired");
       } else {

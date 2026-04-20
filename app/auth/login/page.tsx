@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { signIn } from "@/lib/user-actions";
 
@@ -18,17 +19,22 @@ import {
 import { LinkedInButton } from "@/components/auth/LinkedInButton";
 import { MdError } from "react-icons/md";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const [form] = Form.useForm();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") ?? undefined;
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<null | string>(null)
   const [loading, setLoading] = useState(false)
   
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true)
     setLoginError(null);
     
-    const res = await signIn(values);
+    const res = await signIn({
+      ...values,
+      next,
+    });
 
     // If signIn redirected, code below won't run (redirect throws internally)
     if (res?.ok === false) {
@@ -67,11 +73,11 @@ export default function LoginPage() {
       </header>
 
       <div className="grid grid-cols-2 gap-4 mb-8">
-        <Button className="font-medium!" icon={<FcGoogle className="text-xl" />}>
-          Google
+        <Button disabled className="font-medium!" icon={<FcGoogle className="text-xl" />}>
+          Google Soon
         </Button>
 
-        <LinkedInButton />
+        <LinkedInButton next={next} />
       </div>
 
       <Divider>Or continue with email</Divider>
@@ -144,5 +150,13 @@ export default function LoginPage() {
         <Typography.Link href="/auth/signup">Create one</Typography.Link>
       </footer>
     </>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageContent />
+    </Suspense>
   );
 }

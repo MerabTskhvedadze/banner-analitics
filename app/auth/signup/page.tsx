@@ -6,7 +6,6 @@ import Link from "next/link";
 import { signUp } from '@/lib/user-actions'
 
 import { FcGoogle } from "react-icons/fc";
-import { BsLinkedin } from "react-icons/bs";
 
 import {
   Form,
@@ -18,24 +17,29 @@ import {
   Typography,
   message,
 } from "antd";
+import { LinkedInButton } from "@/components/auth/LinkedInButton";
+
+type SignupValues = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  profession?: string;
+  terms?: boolean;
+};
 
 export default function SignupPage() {
   const [form] = Form.useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false)
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: SignupValues) => {
     setLoading(true)
     const res = await signUp(values);
     if (res?.ok === false) {
-      console.log(res)
       message.error(res.message)
     }
     setLoading(false)
   };
-
-  // 07cada85-6fa2-4c9c-ab3d-c1fece7ccc2d
-  // 4f471679-6731-4bc8-9c90-1a83b3da4cf7
 
   return (
     <>
@@ -49,16 +53,11 @@ export default function SignupPage() {
       </header>
 
       <div className="grid grid-cols-2 gap-4 mb-8">
-        <Button className="font-medium!" icon={<FcGoogle className="text-xl" />}>
-          Google
+        <Button disabled className="font-medium!" icon={<FcGoogle className="text-xl" />}>
+          Google Soon
         </Button>
 
-        <Button
-          className="font-medium!"
-          icon={<BsLinkedin className="text-primary! text-lg" />}
-        >
-          LinkedIn
-        </Button>
+        <LinkedInButton />
       </div>
 
       <Divider>Or continue with email</Divider>

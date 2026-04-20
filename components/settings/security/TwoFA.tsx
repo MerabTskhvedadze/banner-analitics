@@ -54,8 +54,8 @@ export default function TwoFA() {
     const load = async () => {
       setStatusLoading(true);
       try {
-        const { data: sess } = await supabase.auth.getSession();
-        if (!sess.session) {
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        if (userError || !userData.user) {
           message.error("Please sign in to manage security settings.");
           setTwoFAEnabled(false);
           setPhase("idle");

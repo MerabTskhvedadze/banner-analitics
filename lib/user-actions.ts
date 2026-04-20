@@ -3,8 +3,24 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
+type SignInValues = {
+  email: string;
+  password: string;
+  next?: string;
+};
 
-export async function signIn(values: any) {
+type SignUpValues = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  [key: string]: unknown;
+};
+
+function normalizeNextPath(next?: string) {
+  return next && next.startsWith("/") ? next : "/dashboard";
+}
+
+export async function signIn(values: SignInValues) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({
     email: values.email,
@@ -15,10 +31,10 @@ export async function signIn(values: any) {
     return { ok: false, message: "Invalid email or password." };
   }
 
-  redirect("/dashboard");
+  redirect(normalizeNextPath(values.next));
 }
 
-export async function signUp(values: any) {
+export async function signUp(values: SignUpValues) {
   const supabase = await createClient();
 
   const { email, password, confirmPassword, ...rest } = values;
@@ -48,6 +64,29 @@ export async function signUp(values: any) {
   }
 
   redirect("/dashboard");
+}
+
+export async function resendVerificationEmail(values: { email: string }) {
+  const supabase = await createClient();
+
+  const email = values.email?.trim();
+  if (!email) {
+    return { ok: false, message: "Please enter your email." };
+  }
+
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    return { ok: false, message: "Could not resend the verification email right now. Please try again." };
+  }
+
+  return { ok: true, message: "If the account still needs verification, a new verification email is on the way." };
 }
 
 export async function signOut() {

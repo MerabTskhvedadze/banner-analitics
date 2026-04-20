@@ -97,7 +97,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     let mounted = true;
 
-    (async () => {
+    const loadUser = async () => {
       setLoadingUser(true);
       try {
         const { data, error } = await supabase.auth.getUser();
@@ -108,13 +108,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       } finally {
         if (mounted) setLoadingUser(false);
       }
-    })();
+    };
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      // optional: show loading briefly if you want
-      setLoadingUser(true);
-      setUser(session?.user ?? null);
-      setLoadingUser(false);
+    void loadUser();
+
+    const { data: sub } = supabase.auth.onAuthStateChange(() => {
+      void loadUser();
     });
 
     return () => {

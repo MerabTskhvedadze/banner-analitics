@@ -4,14 +4,20 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from 'antd'
 import { BsLinkedin } from 'react-icons/bs'
 
-export function LinkedInButton() {
+export function LinkedInButton({ next }: { next?: string }) {
   const supabase = createClient()
 
   const onLinkedIn = async () => {
+    const callbackUrl = new URL("/auth/callback", window.location.origin)
+
+    if (next && next.startsWith("/")) {
+      callbackUrl.searchParams.set("next", next)
+    }
+
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'linkedin_oidc',
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        redirectTo: callbackUrl.toString(),
         scopes: "openid profile email",
       },
     })

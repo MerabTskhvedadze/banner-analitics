@@ -4,7 +4,7 @@ import { Suspense, useMemo, useState } from 'react'
 import { Button, Typography, message } from 'antd'
 import { MdArrowBack, MdMarkEmailRead } from 'react-icons/md'
 import { useSearchParams } from 'next/navigation'
-import { requestPasswordReset } from '@/lib/user-actions'
+import { resendVerificationEmail } from '@/lib/user-actions'
 
 function CheckEmailContent() {
   const searchParams = useSearchParams()
@@ -15,7 +15,7 @@ function CheckEmailContent() {
 
   const onResend = async () => {
     setLoading(true)
-    const res = await requestPasswordReset({ email })
+    const res = await resendVerificationEmail({ email })
     if (res.ok) message.success(res.message)
     else message.error(res.message)
     setLoading(false)
@@ -31,17 +31,17 @@ function CheckEmailContent() {
         <Typography.Title level={3} className='m-0!'>Check your email</Typography.Title>
 
         <Typography.Title level={5} type='secondary' className='m-0! my-4!'>
-          If an account exists for{' '}
+          We sent a verification link to
           <br />
           <span className="font-semibold text-slate-900 dark:text-slate-200">
             {email || 'your email'}
           </span>
           <br />
-          you’ll receive a link.
+          if the signup was successful.
         </Typography.Title>
 
         <Typography.Text type='secondary' className="leading-relaxed! mb-3.5!">
-          New accounts get a verification link. Existing accounts may receive a password reset link so you can sign in.
+          Open the email and confirm your account to finish signup.
           <Typography.Text type='warning'>
             (Check Spam/Promotions too)
           </Typography.Text>
@@ -56,7 +56,7 @@ function CheckEmailContent() {
               disabled={!email}
               onClick={onResend}
             >
-              Send link again
+              Resend verification email
             </Button>
           </div>
 
